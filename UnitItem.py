@@ -19,7 +19,7 @@ class UnitItem(Item):
         if name:
             self.__name = name
         else:
-            raise ValueError('Incorrect value: product name.')
+            raise ValueError('Incorrect value: product.')
     
 
     @property
@@ -29,11 +29,18 @@ class UnitItem(Item):
 
     @Price.setter
     def Price(self, price:float) -> None:
-        print(type(price))
-        if isinstance(price, float) and price > 0:
-            self.__price = price
-        else:
-            raise ValueError('Incorrect value: price unit.')
+        # I have added "if-else" validation into "UnitItem class" to check if price value is float
+        # TK Inter always returs a string from input field, so if users enter text in price field then without "try" block it shows an error.
+        # How can I avoid this try/except block in "UnitItem" class?
+        error = 'Incorrect value: price per unit.'
+        try:
+            price = float(price)
+            if price > 0:
+                self.__price = float(price)
+            else:
+                raise ValueError(error)
+        except:
+            raise ValueError(error)
 
 
     #getter and setter for myQuantity
@@ -44,11 +51,15 @@ class UnitItem(Item):
 
     @Quantity.setter
     def Quantity(self, qty:int) -> None:
-        if isinstance(qty, int) and qty > 0:
-            self.__qty = qty
-        else:
-            raise ValueError('Incorrect value: quantity.')
-
+        error = 'Incorrect value: number of units.'
+        try:
+            qty = int(qty)
+            if qty > 0:
+                self.__qty = int(qty)
+            else:
+                raise ValueError(error)
+        except:
+            raise ValueError(error)
 
     #calculates cost of the unit item
     def calcCost(self) -> float:

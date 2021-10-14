@@ -64,19 +64,8 @@ def addToCart():
     
     customer = supermarket.findCustomer(cname)
     if customer and customer.CurrentCart:
-
-        try: 
-        # I have added "if-else" validation into "UnitItem class" to check if price value is float
-        # TK Inter always returs a string from input field, so if users enter text in price field then without "try" block it shows an error.
-        # How can I avoid this try/except block in this 'View' file and in "UnitItem" class?
-            price = float(itemPriceInput.get())
-            qty = int(itemQuantityInput.get())
-        except:
-            showinfo(
-            title = "Error",
-            message = "Price or quantity is not correct."
-        )
-        
+        price = itemPriceInput.get()
+        qty = itemQuantityInput.get()
 
         try:
             prod =  productNameInput.get()
