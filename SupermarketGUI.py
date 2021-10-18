@@ -17,18 +17,20 @@ customerNames = supermarket.getCustomerNames()
 #HELPER METHODS
 
 
-def getCardNumber(name):
-        cardNumber = supermarket.getCustomerID(name)
-        cardNumberInput.configure(state='normal')
-        cardNumberInput.delete(0, 'end')
-        cardNumberInput.insert(0, cardNumber)
-        cardNumberInput.configure(state='disabled')
+def getCardNumber(customerName):
+    customer = supermarket.findCustomer(customerName)
+    cardNumber = supermarket.getCustomerCardNumber(customer)
+    cardNumberInput.configure(state='normal')
+    cardNumberInput.delete(0, 'end')
+    cardNumberInput.insert(0, cardNumber)
+    cardNumberInput.configure(state='disabled')
 
 def findCustomer():
-    foundCustomer = supermarket.findCustomer(findCustomersInput.get())
-    if foundCustomer:
-        customersListVar.set(foundCustomer.Name)
-        getCardNumber(foundCustomer.Name)
+    customerName = findCustomersInput.get()
+    customer = supermarket.findCustomer(customerName)
+    if customer:
+        customersListVar.set(customer.Name)
+        getCardNumber(customer.Name)
     else:
         showinfo(
         title = "Error",
@@ -36,11 +38,12 @@ def findCustomer():
     )
 
 def showCustomerInfo():
-    foundCustomer = supermarket.findCustomer(customersListVar.get())
-    if foundCustomer:
+    customerName = customersListVar.get()
+    customer = supermarket.findCustomer(customerName)
+    if customer:
         showinfo(
         title = "Customer Info",
-        message = foundCustomer
+        message = customer
     )
     else:
         showinfo(
@@ -49,10 +52,11 @@ def showCustomerInfo():
     )
 
 def startShopping():
-    cname = customersListVar.get()
-    foundCustomer = supermarket.findCustomer(customersListVar.get())
-    if foundCustomer:
-        supermarket.startShopping(cname)
+    customerName = customersListVar.get()
+    customer = supermarket.findCustomer(customerName)
+    if customer:
+        supermarket.startShopping(customer)
+        showCurrentCart(customer)
     else:
         showinfo(
         title = "Error",
@@ -60,9 +64,8 @@ def startShopping():
     )
 
 def addToCart():
-    cname = customersListVar.get()
-    
-    customer = supermarket.findCustomer(cname)
+    customerName = customersListVar.get()
+    customer = supermarket.findCustomer(customerName)
     if customer and customer.CurrentCart:
         price = itemPriceInput.get()
         qty = itemQuantityInput.get()
@@ -71,40 +74,55 @@ def addToCart():
             prod =  productNameInput.get()
             
             if itemTypeGroup.get() == 1: # 1 is unit item
-                supermarket.addCustUnitItem(cname=cname, prod=prod, price=price, qty=qty)
+                supermarket.addCustUnitItem(customer=customer, prod=prod, price=price, qty=qty)
             else:
-                supermarket.addCustWeightItem(cname=cname, prod=prod, price=price)
+                supermarket.addCustWeightItem(customer=customer, prod=prod, price=price)
+
+            emptyProductFields()
+
         except ValueError as error:
             showinfo(
             title = "Error",
             message = error
         )
+        showCurrentCart(customer)
         
-        cartItemsList.delete(0,'end')
-        for item in customer.CurrentCart.Items:
-            cartItemsList.insert(0, item)
     else:
         showinfo(
         title = "Error",
         message = "Please select customer and click 'Start shopping button'."
     )
 
-def newItem():
+def showCurrentCart(customer):
+    cartItemsList.delete(0,'end')
+    for item in customer.CurrentCart.Items:
+        cartItemsList.insert(0, item)
+
+    totalCostInput.configure(state='normal')
+    totalCostInput.delete(0, 'end')
+    totalCostInput.insert(0, supermarket.calcCustCartTotal(customer))
+    totalCostInput.configure(state='disabled')
+
+def emptyProductFields():
     productNameInput.delete(0, 'end')
-    itemTypeGroup.set(1)
     itemPriceInput.delete(0, 'end')
     itemQuantityInput.delete(0, 'end')
-    
+
+def checkout():
+    customerName = customersListVar.get()
+    customer = supermarket.findCustomer(customerName)
+    supermarket.addCustCart(customer)
+    showCurrentCart(customer)
 
 # CREATE FORM
 root = tk.Tk()
-root.geometry("800x600")
+root.geometry("800x700")
 root.resizable(False, False)
 root.configure(pady="10", padx="10")
 root.title('Supermarket Application')
 
 
-titleLabel = tk.Label(master=root, text = "Lincol Supermarket")  
+titleLabel = tk.Label(master=root, text = "Lincoln Supermarket")  
 titleLabel.configure(font=("default", 18, "bold"))
 titleLabel.pack(padx=5)
 
@@ -203,6 +221,7 @@ def setUnitTextValues():
         itemQuantityInput.delete(0, 'end')
         itemQuantityInput.configure(state='disabled')
         itemPriceLabel.configure(text="Price per Kilo")
+    emptyProductFields()
 
 
 itemTypeFrame = tk.LabelFrame(productFrame, text="Item Type")
@@ -261,33 +280,45 @@ itemPriceInput.pack(padx=5, side=tk.LEFT)
 
 ## Cart frame
 cartFrame = tk.Frame(master=transactionFrame, relief=tk.FLAT)
-cartFrame.pack(ipadx=10, ipady=5, fill=tk.X, expand=True, side=tk.LEFT)
+cartFrame.pack(ipadx=10, ipady=5, fill=tk.X, expand=True)
 
-
+### Cart and buttons frame
 cartItemsList = tk.Listbox(master=cartFrame, exportselection=False)
 cartItemsList.pack(padx=5, pady=5, fill=tk.X)
 
 addToCartButton = tk.Button(master=cartFrame, text="Add to Cart", width=10, command=addToCart)
 addToCartButton.pack(padx=5, pady=5, side=tk.LEFT)
 
-newItemButton = tk.Button(master=cartFrame, text="New Item", width=10, command=newItem)
+newItemButton = tk.Button(master=cartFrame, text="New Item", width=10, command=emptyProductFields)
 newItemButton.pack(padx=5, pady=5, side=tk.LEFT)
 
-checkoutButton = tk.Button(master=cartFrame, text="Checkout", width=10, command='checkout')
+checkoutButton = tk.Button(master=cartFrame, text="Checkout", width=10, command=checkout)
 checkoutButton.pack(padx=5, pady=5, side=tk.LEFT)
+### END Cart and buttons frame
 
-
+### Total cost frame
 totalCostFrame = tk.Frame(master=transactionFrame, relief=tk.FLAT)
-totalCostFrame.pack(ipadx=10, ipady=5, fill=tk.X, expand=True, side=tk.LEFT)
+totalCostFrame.pack(ipadx=10, ipady=5, fill=tk.X, expand=True)
 
 totalCostLabel = tk.Label(master=totalCostFrame, text = "Total Cost:")  
 totalCostLabel.pack(padx=5, side=tk.LEFT)
 
-
-
-totalCostInput = tk.Entry(master=totalCostFrame, width=20)
+totalCostInput = tk.Entry(master=totalCostFrame, width=20, state='disabled')
 totalCostInput.insert(0, "")
 totalCostInput.pack(padx=5, side=tk.LEFT)
+### END Total cost frame
+
+### Current cart club points frame
+currentCartClubPointsFrame = tk.Frame(master=transactionFrame, relief=tk.FLAT)
+currentCartClubPointsFrame.pack(ipadx=10, ipady=5, fill=tk.X, expand=True)
+
+currentCartClubPointsLabel = tk.Label(master=currentCartClubPointsFrame, text = "Current Cart Club Points:")  
+currentCartClubPointsLabel.pack(padx=5, side=tk.LEFT)
+
+currentCartClubPointsInput = tk.Entry(master=currentCartClubPointsFrame, width=10, state='disabled')
+currentCartClubPointsInput.insert(0, "")
+currentCartClubPointsInput.pack(padx=5, side=tk.LEFT)
+#### END Current cart club points frame
 ## END Cart frame
 # END Transaction frame
 

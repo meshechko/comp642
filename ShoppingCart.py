@@ -40,4 +40,4 @@ class ShoppingCart:
         total = 0
         for item in self.__items:
             total += item.calcCost()
-        return total
+        return float(format(total, '.2f'))

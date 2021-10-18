@@ -41,19 +41,15 @@ class Supermarket:
                 return customer
 
     # finds a customer's card number based on a customer's name
-    def getCustomerID(self, cname:str) -> int:
-        for customer in self.__customers:
-            if cname.lower() in customer.Name.lower():
-                return customer.CardNumber
+    def getCustomerCardNumber(self, customer:Customer) -> int:
+        return customer.CardNumber
 
     # gets the club point for a selected customer 
-    def getCustomerClubPoint(self, cname:str) -> int:
-        customer = self.findCustomer(cname)
+    def getCustomerClubPoint(self, customer:Customer) -> int:
         return customer.ClubPoint
 
     # adds unit item to the customer's current cart and returns the cost
-    def addCustUnitItem(self, cname:str, prod:str, price:float, qty:int) -> float:
-        customer = self.findCustomer(cname)
+    def addCustUnitItem(self, customer:Customer, prod:str, price:float, qty:int) -> float:
         customerCurrentCart = customer.CurrentCart
         unitItem = UnitItem()
         unitItem.Name = prod
@@ -63,8 +59,7 @@ class Supermarket:
         return cost
 
     # adds weight item to the customer's current cart and returns the cost
-    def addCustWeightItem(self, cname:str, prod:str, price:float) -> float:
-        customer = self.findCustomer(cname)
+    def addCustWeightItem(self, customer:Customer, prod:str, price:float) -> float:
         weightItem = WeightItem()
         weightItem.Name = prod
         weightItem.Price = price
@@ -72,19 +67,24 @@ class Supermarket:
         return cost
 
     # calculates customer's current cart total
-    def calcCustCartTotal(self, cname:str) -> float:
-        customer = self.findCustomer(cname)
+    def calcCustCartTotal(self, customer:Customer) -> float:
         return customer.CurrentCart.calcTotalCost()
 
     # adds the current cart to the customer's cart list
-    def addCustCart(self, cname:str) -> None:
-        pass
+    def addCustCart(self, customer:Customer) -> None:
+        # Update customer club points
+        customer.updateClubPoint()
+        # Update custome todate spent
+        customer.updateTotal()
+        # Move current cart to list of all carts
+        customer.addToCartList()
+        #empty customer current cart
+        customer.CurrentCart = ShoppingCart()
 
     # customer starts shopping with an empty cart
-    def startShopping(self, cname:str) -> None:
-        customer = self.findCustomer(cname)
+    def startShopping(self, customer) -> None:
         customer.CurrentCart = ShoppingCart()
-        print(customer.CurrentCart.__dict__)
+
 
     #calculates total sales for the supermarket
     def calcTotalSales(self) -> float:

@@ -3,27 +3,39 @@ from abc import ABC, abstractmethod
 class Item (ABC):
 
     #constructor 
-    def __init__(self, prodName:str, price:float) -> None:
-        self._myProdName = prodName
-        self._myPrice = price
+    def __init__(self) -> None:
+        self._name = ''
+        self._price = 0
     
-    #getter and setter for myProdName
     @property
-    def ProductName(self) -> str:
-        pass
+    def Name(self) -> str:
+        return self._name
+
+
+    @Name.setter
+    def Name(self, name:str) -> None:
+        if name:
+            self._name = name
+        else:
+            raise ValueError('Incorrect value: product.')
     
-    @ProductName.setter
-    def ProductName(self, value:str) -> None:
-        pass
 
-    #getter and setter for myPrice
     @property
-    def ProductPrice(self) -> float:
-        pass
+    def Price(self) -> str:
+        return self._price
 
-    @ProductPrice.setter
-    def ProductPrice(self, value:float) -> None:
-        pass
+
+    @Price.setter
+    def Price(self, price:float) -> None:
+        error = 'Incorrect value: price per unit.'
+        try:
+            price = float(price)
+            if price > 0:
+                self._price = float(price)
+            else:
+                raise ValueError(error)
+        except:
+            raise ValueError(error)
 
     #abstract method to calculate cost of the item
     @abstractmethod

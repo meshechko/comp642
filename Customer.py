@@ -1,5 +1,6 @@
 from ShoppingCart import ShoppingCart
 from typing import List
+import math
 
 class Customer:
     next_card_number = 10000
@@ -57,7 +58,7 @@ class Customer:
 
     @TotalToDate.setter
     def TotalToDate(self, value:float) -> None:
-        self.__totalToDate = self.TotalToDate + value
+        self.__totalToDate = value
 
     #represents the class object as a string
     def __str__(self) -> str:
@@ -65,7 +66,7 @@ class Customer:
 
     #add current cart to the list of carts
     def addToCartList(self) -> None:
-        self.__carList.append(self.CurrentCart)
+        self.__cartList.append(self.__currentCart)
 
     #update total purchase to date
     def updateTotal(self) -> None:
@@ -73,7 +74,8 @@ class Customer:
 
     #calculate club point for the current cart
     def calcClubPoint(self) -> int:
-        return self.CurrentCart.calcTotalCost() * 0.1 #1 point for each $10.00 spent at the supermarket
+        clubPoints = self.CurrentCart.calcTotalCost() * 0.1 #1 point for each $10.00 spent at the supermarket
+        return math.floor(clubPoints)
 
     #update the total club point
     def updateClubPoint(self) -> None:
