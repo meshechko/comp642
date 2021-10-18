@@ -25,6 +25,7 @@ def getCardNumber(customerName):
     cardNumberInput.insert(0, cardNumber)
     cardNumberInput.configure(state='disabled')
 
+
 def findCustomer():
     customerName = findCustomersInput.get()
     customer = supermarket.findCustomer(customerName)
@@ -36,6 +37,7 @@ def findCustomer():
         title = "Error",
         message = f"No customers found with name '{ findCustomersInput.get() }'"
     )
+
 
 def showCustomerInfo():
     customerName = customersListVar.get()
@@ -51,6 +53,7 @@ def showCustomerInfo():
         message = "Please select customer first."
     )
 
+
 def startShopping():
     customerName = customersListVar.get()
     customer = supermarket.findCustomer(customerName)
@@ -62,6 +65,7 @@ def startShopping():
         title = "Error",
         message = "Select customer."
     )
+
 
 def addToCart():
     customerName = customersListVar.get()
@@ -93,20 +97,34 @@ def addToCart():
         message = "Please select customer and click 'Start shopping button'."
     )
 
+
 def showCurrentCart(customer):
     cartItemsList.delete(0,'end')
     for item in customer.CurrentCart.Items:
         cartItemsList.insert(0, item)
+    showCartTotal(customer)
+    showCartClubPoints(customer)
 
+
+def showCartTotal(customer):
     totalCostInput.configure(state='normal')
     totalCostInput.delete(0, 'end')
     totalCostInput.insert(0, supermarket.calcCustCartTotal(customer))
     totalCostInput.configure(state='disabled')
 
+
+def showCartClubPoints(customer):
+    currentCartClubPointsInput.configure(state='normal')
+    currentCartClubPointsInput.delete(0, 'end')
+    currentCartClubPointsInput.insert(0, supermarket.getCustomerCurrentCartClubPoint(customer))
+    currentCartClubPointsInput.configure(state='disabled')
+    
+
 def emptyProductFields():
     productNameInput.delete(0, 'end')
     itemPriceInput.delete(0, 'end')
     itemQuantityInput.delete(0, 'end')
+
 
 def checkout():
     customerName = customersListVar.get()

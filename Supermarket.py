@@ -44,9 +44,13 @@ class Supermarket:
     def getCustomerCardNumber(self, customer:Customer) -> int:
         return customer.CardNumber
 
-    # gets the club point for a selected customer 
+    # gets the club point for a current customer 
     def getCustomerClubPoint(self, customer:Customer) -> int:
         return customer.ClubPoint
+    
+    # gets the club point for customer current cart
+    def getCustomerCurrentCartClubPoint(self, customer:Customer) -> int:
+        return customer.calcClubPoint()
 
     # adds unit item to the customer's current cart and returns the cost
     def addCustUnitItem(self, customer:Customer, prod:str, price:float, qty:int) -> float:
