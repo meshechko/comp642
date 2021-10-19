@@ -58,11 +58,11 @@ class Customer:
 
     @TotalToDate.setter
     def TotalToDate(self, value:float) -> None:
-        self.__totalToDate = value
+        self.__totalToDate = float(format(value, '.2f'))
 
     #represents the class object as a string
     def __str__(self) -> str:
-        return f'Customer: { self.Name }, card: { self.CardNumber }, club points: { self.ClubPoint }'
+        return f'{ self.Name }  { self.CardNumber }  { self.ClubPoint }  ${ self.__totalToDate }'
 
     #add current cart to the list of carts
     def addToCartList(self) -> None:

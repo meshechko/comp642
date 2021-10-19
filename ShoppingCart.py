@@ -23,7 +23,7 @@ class ShoppingCart:
 
     #represents the class object as a string
     def __str__(self) -> str:
-        return f'Items: { ",".join(self.__items) }, date: { self.__purchaseDate }, { self.calcTotalCost() }'
+        return f'{chr(10)}{chr(10)}{ self.__purchaseDate } ${ self.calcTotalCost() } {chr(10)}{ chr(10).join(str(item) for item in self.__items) }'
 
     #adds unit item to the cart and returns the cost
     def addUnitItem(self, unitItem:UnitItem) -> float:

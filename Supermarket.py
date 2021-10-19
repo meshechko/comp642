@@ -95,8 +95,8 @@ class Supermarket:
         pass
 
     # gets the list of customers and their transactions 
-    def listCustomerTransaction(self) -> str:
-        pass
+    def listCustomerCarts(self, customer) -> str:
+        return customer.CartList
 
     #finds customer with the most purchase
     def findTopCustomer(self) -> str:

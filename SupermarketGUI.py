@@ -66,6 +66,28 @@ def startShopping():
         message = "Select customer."
     )
 
+def customerShoppingCarts():
+    customerName = customersListVar.get()
+    customer = supermarket.findCustomer(customerName)
+    if customer:
+        carts = supermarket.listCustomerCarts(customer)
+        if len(carts) > 0:
+            cartsStr = str(customer) + ''
+            for cart in carts:
+                cartsStr += str(cart) + '\n'
+        else:
+            cartsStr = customer + " doesn't have any carts yet."
+        showinfo(
+        title = customer.Name+"'s carts",
+        message = cartsStr
+    )
+    else:
+        showinfo(
+        title = "Error",
+        message = "Select customer."
+    )
+
+
 
 def addToCart():
     customerName = customersListVar.get()
@@ -129,8 +151,22 @@ def emptyProductFields():
 def checkout():
     customerName = customersListVar.get()
     customer = supermarket.findCustomer(customerName)
-    supermarket.addCustCart(customer)
-    showCurrentCart(customer)
+    if customer and customer.CurrentCart:
+        if len(customer.CurrentCart.Items):
+            supermarket.addCustCart(customer)
+            showCurrentCart(customer)
+        else:
+            showinfo(
+            title = "Error",
+            message = "Add items to shopping cart first."
+    )
+    else:
+        showinfo(
+        title = "Error",
+        message = "Please select customer and click 'Start shopping button'."
+    )
+
+
 
 # CREATE FORM
 root = tk.Tk()
@@ -189,17 +225,20 @@ cardNumberInput.pack(padx=5, side=tk.LEFT)
 customerDetailsButtonsFrame = tk.Frame(master=customerDetailFrame, relief=tk.FLAT, borderwidth=3)
 customerDetailsButtonsFrame.pack(ipadx=10, ipady=5, fill=tk.X, expand=True)
 
-startShoppingButton = tk.Button(master=customerDetailsButtonsFrame, text="Start Shopping", width=20, command=startShopping)
+startShoppingButton = tk.Button(master=customerDetailsButtonsFrame, text="Start Shopping", width=15, command=startShopping)
 startShoppingButton.pack(padx=5, pady=5, side=tk.LEFT)
 
-nextCustomerButton = tk.Button(master=customerDetailsButtonsFrame, text="Next Customer", width=20, command='nextCustomer')
+nextCustomerButton = tk.Button(master=customerDetailsButtonsFrame, text="Next Customer", width=15, command='nextCustomer')
 nextCustomerButton.pack(padx=5, pady=5, side=tk.LEFT)
 
-exitButton = tk.Button(master=customerDetailsButtonsFrame, text="Exit", width=20, command='exit')
+exitButton = tk.Button(master=customerDetailsButtonsFrame, text="Exit", width=15, command='exit')
 exitButton.pack(padx=5, pady=5, side=tk.LEFT)
 
-customerInfoButton = tk.Button(master=customerDetailsButtonsFrame, text="Customer Information", width=20, command=showCustomerInfo)
+customerInfoButton = tk.Button(master=customerDetailsButtonsFrame, text="Customer Info", width=15, command=showCustomerInfo)
 customerInfoButton.pack(padx=5, pady=5, side=tk.LEFT)
+
+customerShoppingCarts = tk.Button(master=customerDetailsButtonsFrame, text="Customer Carts", width=15, command=customerShoppingCarts)
+customerShoppingCarts.pack(padx=5, pady=5, side=tk.LEFT)
 
 # END Customer details frame
 

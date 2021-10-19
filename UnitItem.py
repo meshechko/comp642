@@ -27,7 +27,8 @@ class UnitItem(Item):
 
     #calculates cost of the unit item
     def calcCost(self) -> float:
-        return self._price * self.__qty
+        total = self._price * self.__qty
+        return float(format(total, '.2f'))
 
 
     #represents the class object as a string
