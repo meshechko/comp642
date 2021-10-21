@@ -1,15 +1,18 @@
+#Student: Olexiy Meshechko, Student ID: 1148995
+
 from typing import List
 from UnitItem import UnitItem
 from WeightItem import WeightItem
 from Item import Item
-from datetime import date, datetime
+from datetime import datetime
+from time import strftime
 
 class ShoppingCart:
 
     #constructor
     def __init__(self) -> None:
-        self.__purchaseDate : str = datetime.now().strftime("%d/%m/%Y")
-        self.__items = []
+        self.__purchaseDate: datetime = datetime.now()
+        self.__items: List[Item] = []
 
     #getter for purchase date
     @property
@@ -23,7 +26,7 @@ class ShoppingCart:
 
     #represents the class object as a string
     def __str__(self) -> str:
-        return f'{chr(10)}{chr(10)}{ self.__purchaseDate } ${ self.calcTotalCost() } {chr(10)}{ chr(10).join(str(item) for item in self.__items) }'
+        return f'{chr(10)}{ self.__purchaseDate.strftime("%d/%m/%Y") } ${ self.calcTotalCost() } {chr(10)}{ chr(10).join(str(item) for item in self.__items) }'
 
     #adds unit item to the cart and returns the cost
     def addUnitItem(self, unitItem:UnitItem) -> float:
@@ -40,4 +43,4 @@ class ShoppingCart:
         total = 0
         for item in self.__items:
             total += item.calcCost()
-        return float(format(total, '.2f'))
+        return total

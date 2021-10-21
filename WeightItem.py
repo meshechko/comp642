@@ -1,4 +1,5 @@
-# from _typeshed import SupportsReadline
+#Student: Olexiy Meshechko, Student ID: 1148995
+
 from Item import Item
 import random
 

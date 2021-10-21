@@ -1,3 +1,5 @@
+#Student: Olexiy Meshechko, Student ID: 1148995
+
 from Item import Item
 
 class UnitItem(Item):

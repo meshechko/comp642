@@ -1,3 +1,5 @@
+#Student: Olexiy Meshechko, Student ID: 1148995
+
 from abc import ABC, abstractmethod
 
 class Item (ABC):
@@ -31,7 +33,7 @@ class Item (ABC):
         try:
             price = float(price)
             if price > 0:
-                self._price = float(price)
+                self._price = price
             else:
                 raise ValueError(error)
         except:
