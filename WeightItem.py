@@ -10,10 +10,14 @@ class WeightItem(Item):
         Item.__init__(self)
         self.__weight = self.scale()
 
-    #getter and setter for myWeight
+    #getter and setter for ProductWeight
     @property
     def ProductWeight(self) -> int:
         return self.__weight
+    
+    @ProductWeight.setter
+    def ProductWeight(self, value: float) -> None:
+        self.__weight = value
 
     #calculates cost of the weight item
     def calcCost(self) -> float:
