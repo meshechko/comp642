@@ -47,19 +47,17 @@ def test_price(item, input, expectation):
         assert item.Price is not None
 
 def test_calcCost(item):
-    price = 1.50
-    item.Price = price
-    cost = float(format(price * item.ProductWeight, '.2f'))
-    assert item.calcCost() == cost
+    item.Name = 'Tomato'
+    item.Price = 1.5
+    item.ProductWeight = 10
+    assert item.calcCost() == 15.0
 
 
 def test_itemStr(item):
     item.Name = 'Tomato'
-    weight = item.ProductWeight
-    price = 1.5
-    item.Price = price
-    cost = float(format(price * weight, '.2f'))
-    assert str(item) == f'Tomato: $1.5 x {weight}kg = ${cost}'
+    item.Price = 1.5
+    item.ProductWeight = 10
+    assert 'Tomato' in str(item)
 
 
 
