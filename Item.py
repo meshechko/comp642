@@ -19,7 +19,7 @@ class Item (ABC):
         if name:
             self._name = name
         else:
-            raise ValueError('Incorrect value: product.')
+            raise ValueError('Incorrect value: product name.')
     
 
     @property
